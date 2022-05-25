@@ -1,0 +1,18 @@
+# 디폴트 무시된 파일
+/shelf/
+/workspace.xml
+# 에디터 기반 HTTP 클라이언트 요청
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+
+misc.xml
+vcs.xml
+PET-READER_BACKEND.iml
+modules.xml
+runConfigurations.xml
+aws.xml
+inspectionProfiles/profiles_settings.xml
+inspectionProfiles/Project_Default.xml
+
