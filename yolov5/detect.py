@@ -83,9 +83,13 @@ def run(
     if is_url and is_file:
         source = check_file(source)  # download
 
+    target = list()
+    result_txt123 = list()
+
     # Directories
     save_dir = increment_path(Path(project) / name, exist_ok=exist_ok)  # increment run
     (save_dir / 'labels' if save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
+    # (save_dir / 'images'if save_txt else save_dir).mkdir(parents=True, exist_ok=True)
 
     # Load model
     device = select_device(device)
@@ -140,10 +144,10 @@ def run(
                 p, im0, frame = path, im0s.copy(), getattr(dataset, 'frame', 0)
 
 
-            target = list()
 
             p = Path(p)  # to Path
             save_path = str(save_dir / p.name)  # im.jpg
+            # save_path = str(save_dir / 'images' / p.stem) + f'_{frame}' + '.jpg'
 
             print(save_path, "save_Path")
             txt_path = str(save_dir / 'labels' / p.stem) + ('' if dataset.mode == 'image' else f'_{frame}')  # im.txt
@@ -160,7 +164,6 @@ def run(
                     n = (det[:, -1] == c).sum()  # detections per class
                     s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
 
-
                     n_ = f"{n} {names[int(c)]} {'s' * (n > 1)}"
                     target.append(n_)
                     print(n_)
@@ -168,8 +171,14 @@ def run(
                 # Write results
                 for *xyxy, conf, cls in reversed(det):
                     if save_txt:  # Write to file
+
                         xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
                         line = (cls, *xywh, conf) if save_conf else (cls, *xywh)  # label format
+
+                        result_txt123.append(('%g ' * len(line)).rstrip() % line)
+                        # print("=========result_txt =========")
+                        # print(('%g ' * len(line)).rstrip() % line)
+
                         with open(txt_path + '.txt', 'a') as f:
                             f.write(('%g ' * len(line)).rstrip() % line + '\n')
 
@@ -201,6 +210,7 @@ def run(
                             h = int(vid_cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
                         else:  # stream
                             fps, w, h = 30, im0.shape[1], im0.shape[0]
+
                         save_path = str(Path(save_path).with_suffix('.mp4'))  # force *.mp4 suffix on results videos
                         vid_writer[i] = cv2.VideoWriter(save_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (w, h))
                     vid_writer[i].write(im0)
@@ -209,8 +219,11 @@ def run(
         LOGGER.info(f'{s}Done. ({t3 - t2:.3f}s)')
 
         print(f'{s}Done. ')
-        print(target)
 
+        # print(target)
+        # print("=========result_txt =========")
+        # print(result_txt123)
+        # print("=========result_txt =========")
 
 
     # Print results
@@ -222,7 +235,7 @@ def run(
     if update:
         strip_optimizer(weights)  # update model (to fix SourceChangeWarning)
 
-    resultYolo = {"result" : target, "path" : save_path}
+    resultYolo = {"result": target, "path": save_path, "result_txt123": result_txt123}
     return resultYolo
 
 
