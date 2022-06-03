@@ -39,7 +39,8 @@ class Upload(Resource):
             file_object.save(dst=file_object.filename)
             print(file_path)
 
-            breed = yolov5.detect.run(weights="yolov5/runs/train/dogtest5_yolov5m_results2/weights/best.pt", source=file_path)
+            breed = yolov5.detect.run(weights="yolov5/runs/train/dogtest5_yolov5m_results2/weights/best.pt",
+                                      source=file_path)
             safety = yolov5.detect.run(weights="yolov5/runs/train/dogsafety/best_safety.pt", source=file_path)
             muzzle = yolov5.detect.run(weights="yolov5/runs/train/dogmuzzle/dog-muzzle-best.pt", source=file_path)
 
@@ -242,6 +243,12 @@ class Upload(Resource):
 
 api.add_resource(Upload, '/upload')
 
+
+@app.route('/downloads', methods=['POST'])
+def download():
+    json = request.get_json()
+    print(json)
+    return send_file(json)
 
 @app.route('/download/breed')
 def breed():
