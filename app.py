@@ -90,7 +90,10 @@ class Upload(Resource):
             print(max_count)
             print("======result_breed222======")
 
-            if max_count == count_breed_check1:
+            if max_count == 0:
+                result_breed = False
+                print("result_breed = False")
+            elif max_count == count_breed_check1:
                 result_breed = True
                 print("result_breed = True")
             elif max_count == count_breed_check2:
@@ -142,7 +145,10 @@ class Upload(Resource):
 
             print("======result_safety222======")
 
-            if max_count_safety == count_safety_check1:
+            if max_count_safety == 0:
+                result_safety = False
+                print("result_muzzle = False")
+            elif max_count_safety == count_safety_check1:
                 result_safety = True
                 print("result_safety = True")
             else:
@@ -181,12 +187,16 @@ class Upload(Resource):
 
             print("======result_muzzle222======")
 
-            if max_count_muzzle == count_muzzle_check2:
+            if max_count_muzzle == 0:
                 result_muzzle = False
-                print("result_muzzle = True")
+                print("result_muzzle = False")
+
+            elif max_count_muzzle == count_muzzle_check2:
+                result_muzzle = False
+                print("result_muzzle = False")
             else:
                 result_muzzle = True
-                print("result_muzzle = False")
+                print("result_muzzle = True")
 
             print(muzzle["path"])
             # img_muzzle = cv2.imread(muzzle["path"], cv2.IMREAD_COLOR)
