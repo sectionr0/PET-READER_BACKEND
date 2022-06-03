@@ -1,10 +1,16 @@
 import os
 import os.path
+
+import flask
 import werkzeug
 import cv2
 from flask import Flask, jsonify, send_file, request
 from flask_restful import Resource, Api, reqparse
 from werkzeug.sansio.multipart import MultipartEncoder
+from flask import redirect, url_for, send_from_directory, render_template
+import json
+
+from werkzeug.utils import secure_filename
 
 import yolov5.detect
 
@@ -15,8 +21,13 @@ api = Api(app)
 class Upload(Resource):
     def post(self):
         parser = reqparse.RequestParser()
+        print("parser")
+        print(parser)
         parser.add_argument('file', type=werkzeug.datastructures.FileStorage, location='files')
         args = parser.parse_args()
+
+        print("args")
+        print(args)
 
         file_object = args['file']
         print(file_object)
@@ -158,7 +169,6 @@ class Upload(Resource):
                 else:
                     count_muzzle_check1 = count_muzzle_check1 + 1
 
-
             print("======result_muzzle222======")
             print("count_muzzle_check1 ")
             print(count_muzzle_check1)
@@ -245,6 +255,16 @@ def safety():
 def hello_world():  # put application's code here
     return 'Hello World!'
 
+
+class HelloWorld(Resource):
+    def get(self):  # GET 요청시 리턴 값에 해당 하는 dict를 JSON 형태로 반환
+        return "test"
+
+
+api.add_resource(HelloWorld, '/test')
+
+if __name__ == "__main__":
+    app.run(debug=True, host='0.0.0.0', port=80)
 
 if __name__ == '__main__':
     app.run()
